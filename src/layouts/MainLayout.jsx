@@ -8,6 +8,7 @@ const MainLayout = ({setIsSidebarOpen,isSidebarOpen}) => {
 //   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
+    <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
     <div className="min-h-screen">
      <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
@@ -27,13 +28,16 @@ const MainLayout = ({setIsSidebarOpen,isSidebarOpen}) => {
             }`}
           >
             <main className=' bg-gray-100'>
+            <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
       <div className="lg:max-w-full md:max-w-full max-w-fit mx-auto px-4 sm:px-6 lg:px-8 py-20 h-full">
         <Outlet />
       </div>
+      </div>  
      </main>
       </div>
       </div>
   </div>
+    </div>
   );
 };
 

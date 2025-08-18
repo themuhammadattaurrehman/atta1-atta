@@ -121,7 +121,8 @@ const [notifications, setNotifications] = useState([]);
   }, []);
   return (
     <>
-      <header className="h-12 header fixed top-0 left-0 w-full flex items-center bg-white shadow-md z-10">
+    <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
+      <header className="h-12 header fixed top-0 left-0 w-full flex items-center shadow-md z-10">
         <div className="flex items-center justify-between w-full px-4 lg:px-8">
           {/* Logo */}
           <a href="/dashboard" className="logo flex items-center">
@@ -167,7 +168,7 @@ const [notifications, setNotifications] = useState([]);
 
           {/* Dropdown */}
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-64 bg-white border rounded shadow-lg z-50">
+            <div className="absolute right-0 mt-2 w-64 border rounded shadow-lg z-50">
               <div className="p-2 border-b font-semibold">Notifications</div>
               <ul>
                 {notifications.map((n) => (
@@ -207,7 +208,7 @@ const [notifications, setNotifications] = useState([]);
               </button>
               {/* Profile Dropdown */}
               {isOpen && (
-                <div className="absolute right-0 mt-2 bg-white shadow-md rounded-md w-48">
+                <div className="absolute right-0 mt-2 shadow-md rounded-md w-48">
                   <div className="p-4 border-b text-center">
                     <h6 className="font-bold">{name}</h6>
                     <span className="text-sm text-gray-500">{role}</span>
@@ -254,6 +255,7 @@ const [notifications, setNotifications] = useState([]);
           </ul>
         </nav>
       </header>
+      </div>
     </>
   );
 };

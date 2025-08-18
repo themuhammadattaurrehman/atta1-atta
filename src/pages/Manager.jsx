@@ -56,11 +56,12 @@ export default function SuperAdmin() {
   if (loading) return <p className="text-center">Loading...</p>;
 
   return (
+    <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Admin Users</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200 shadow-md rounded-lg">
-          <thead className="bg-white border-b border-gray-100">
+          <thead className="border-b border-gray-100">
             <tr>
               {/* <th className="px-4 py-2 text-left">ID</th> */}
               <th className="px-4 py-2 text-left">Name</th>
@@ -104,6 +105,7 @@ export default function SuperAdmin() {
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 }

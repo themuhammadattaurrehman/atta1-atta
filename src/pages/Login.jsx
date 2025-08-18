@@ -104,6 +104,7 @@ console.log("Access Token:", data.user.role);
   };
 
   return (
+    <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -111,7 +112,7 @@ console.log("Access Token:", data.user.role);
         transition={{ duration: 0.6 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white/90 backdrop-blur rounded-2xl shadow-2xl p-6">
+        <div className=" backdrop-blur rounded-2xl shadow-2xl p-6">
           {/* Tabs */}
           <div className="flex justify-between mb-6">
             <button
@@ -231,6 +232,7 @@ console.log("Access Token:", data.user.role);
           </div>
         </div>
       </motion.div>
+    </div>
     </div>
   );
 }

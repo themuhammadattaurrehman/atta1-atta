@@ -47,7 +47,8 @@ const NotificationAdd = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
+
+    <div className="max-w-md mx-auto mt-10 p-6 rounded shadow">
       <h2 className="text-2xl font-bold mb-4">Add Notification</h2>
       {status && (
         <p
