@@ -42,7 +42,7 @@ const AddTenant = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
+    <div className="max-w-md mx-auto mt-10 p-6 rounded shadow">
       <h2 className="text-2xl font-bold mb-4">Add Tenant</h2>
       {message && <p className="mb-4 text-red-500">{message}</p>}
       <form onSubmit={handleSubmit}>
@@ -51,7 +51,10 @@ const AddTenant = () => {
           placeholder="Tenant Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+           className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800"
         />
         <button
           type="submit"
@@ -64,5 +67,4 @@ const AddTenant = () => {
     </div>
   );
 };
-
 export default AddTenant;

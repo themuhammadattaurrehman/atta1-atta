@@ -129,7 +129,7 @@ export default function Tenant() {
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200 shadow-md rounded-lg">
-          <thead className="bg-white border-b border-gray-100">
+          <thead className="border-b border-gray-100">
             <tr>
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Delete</th>

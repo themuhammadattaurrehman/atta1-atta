@@ -144,14 +144,20 @@ console.log("Access Token:", data.user.role);
                 Welcome Back
               </h2>
               <input name="email" type="email" placeholder="Email" required
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"/>
+                className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800"/>
               <div className="relative">
                 <input
                   name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   required
-                  className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800"
                 />
                 <button type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -160,7 +166,10 @@ console.log("Access Token:", data.user.role);
                 </button>
               </div>
               <select value={role} onChange={(e) => setRole(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800">
                 <option value="SuperAdmin">SuperAdmin</option>
                 <option value="Admin">Admin</option>
                 <option value="Manager">Manager</option>
@@ -180,16 +189,25 @@ console.log("Access Token:", data.user.role);
                 Create Account
               </h2>
               <input name="name" type="text" placeholder="Full Name" required
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"/>
+                 className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800"/>
               <input name="email" type="email" placeholder="Email" required
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"/>
+               className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800"/>
               <div className="relative">
                 <input
                   name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   required
-                  className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800"
                 />
                 <button type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -198,14 +216,20 @@ console.log("Access Token:", data.user.role);
                 </button>
               </div>
               <select value={role} onChange={(e) => setRole(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                 className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800">
                 {/* <option value="SuperAdmin">SuperAdmin</option> */}
                 <option value="Admin">Admin</option>
                 <option value="Manager">Manager</option>
                 <option value="User">User</option>
               </select>
               <select value={tenant} onChange={(e) => setTenant(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800"
                 required>
                 <option value="">-- Select Tenant --</option>
                 {tenants.map((t) => (

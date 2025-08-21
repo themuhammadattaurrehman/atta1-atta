@@ -65,7 +65,10 @@ const NotificationAdd = () => {
           placeholder="Notification Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+           className="w-full p-2 mb-4 border rounded 
+             text-black dark:text-white 
+             placeholder-gray-400 dark:placeholder-gray-500 
+             bg-white dark:bg-gray-800"
         />
         <button
           type="submit"

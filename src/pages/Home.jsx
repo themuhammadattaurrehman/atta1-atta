@@ -109,9 +109,9 @@ console.log("User:", user);
 //     </div>
 //   </div>
 // </section>
-
-    <div className="flex items-center min bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full">
+ <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
+   
+      <div className=" shadow-lg rounded-2xl p-8 max-w-md w-full">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">👤 User Dashboard</h1>
         
         <p className="text-gray-600 mb-6">
@@ -131,7 +131,8 @@ console.log("User:", user);
           </button>
         </div>
       </div>
-    </div>
+    
+</div>
   )
 }
 

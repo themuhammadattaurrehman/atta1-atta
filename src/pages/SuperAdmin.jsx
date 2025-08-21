@@ -60,7 +60,7 @@ const toggleApproval = async (id, currentStatus) => {
       <h2 className="text-2xl font-bold mb-4">Admin Users</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200 shadow-md rounded-lg">
-          <thead className="bg-white border-b border-gray-100">
+          <thead className="border-b border-gray-100">
             <tr>
               {/* <th className="px-4 py-2 text-left">ID</th> */}
               <th className="px-4 py-2 text-left">Name</th>
