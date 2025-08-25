@@ -7,44 +7,56 @@ const NotificationAdd = () => {
   const [status, setStatus] = useState(""); // success/error message
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ console.log("TenantId:", localStorage.user?.TenantId);
 
-    if (!message.trim()) {
-      setStatus("⚠️ Please enter a notification message");
-      return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!message.trim()) {
+    setStatus("⚠️ Please enter a notification message");
+    return;
+  }
+
+  setLoading(true);
+  setStatus("");
+
+  try {
+    const token = localStorage.getItem("token"); // JWT token
+    const user = JSON.parse(localStorage.getItem("user")); // Parse user object
+    const tenantId = user?.TenantId; // Get TenantId safely
+
+    if (!tenantId) {
+      throw new Error("TenantId not found in localStorage");
     }
 
-    setLoading(true);
-    setStatus("");
+    const res = await fetch(`${NOTIFICATION_API}/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ 
+        message, 
+        tenantId   // 👈 send tenantId with the message
+      }),
+    });
 
-    try {
-      const token = localStorage.getItem("token"); // JWT token
+    const data = await res.json();
 
-      const res = await fetch(`${NOTIFICATION_API}/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ message }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Error creating notification");
-      }
-
-      setStatus("✅ Notification created successfully!");
-      setMessage(""); // clear input after success
-    } catch (err) {
-      console.error("Notification create error:", err.message);
-      setStatus("❌ " + err.message);
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      throw new Error(data.message || "Error creating notification");
     }
-  };
+
+    setStatus("✅ Notification created successfully!");
+    setMessage(""); // clear input after success
+  } catch (err) {
+    console.error("Notification create error:", err.message);
+    setStatus("❌ " + err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
 

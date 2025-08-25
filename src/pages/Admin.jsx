@@ -1,34 +1,36 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:5000/api"; // change to your backend URL
+const API_URL = "http://localhost:5000/api";
 
 export default function SuperAdmin() {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // ✅ Fetch admins on load
-  useEffect(() => {
-    const fetchAdmins = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        console.log("Fetching admins with token:", token);
-        const res = await fetch(`${API_URL}/users/managers-users`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        console.log("Fetched Admins:", data);
-        setAdmins(data.data || []);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAdmins();
+ useEffect(() => {
+   fetchAdmins();
   }, []);
+  const fetchAdmins = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const tenantId = user?.TenantId;
 
-  // ✅ Approve/Unapprove toggle
+      if (!tenantId) throw new Error("TenantId not found in localStorage");
+
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(`${API_URL}/users/managers-users?tenantId=${tenantId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+      console.log("Fetched Admins:", data);
+      setAdmins(data.data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 const toggleApproval = async (id, currentStatus) => {
   try {
     const token = localStorage.getItem("token");
@@ -51,7 +53,6 @@ const toggleApproval = async (id, currentStatus) => {
     console.error(err);
   }
 };
-
 
   if (loading) return <p className="text-center">Loading...</p>;
 
@@ -97,7 +98,7 @@ const toggleApproval = async (id, currentStatus) => {
             {admins.length === 0 && (
               <tr>
                 <td colSpan="5" className="text-center py-4">
-                  No admins found.
+                  No user and manager found.
                 </td>
               </tr>
             )}

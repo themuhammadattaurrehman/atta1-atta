@@ -105,7 +105,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           </svg>
         )}
       </button>
-
+<div className='bg-white text-black dark:bg-gray-900 dark:text-white'>
       {/* Sidebar */}
       <div className={`fixed mt-12 left-0 h-full w-35 md:w-48 lg:w-64 bg-gray-800 text-white transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6">
@@ -176,6 +176,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </ul>
           </nav>
         </div>
+      </div>
       </div>
     </>
   );

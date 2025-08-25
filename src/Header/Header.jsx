@@ -1,113 +1,96 @@
-import React, { useState,useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Logo from "../assets/img/logo.jpeg";
 import profile from "../assets/img/profile-img.jpg";
-import { useNavigate } from 'react-router-dom';
-import { Bell } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Bell from "lucide-react/dist/esm/icons/bell";
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [notificationOpen, setNotificationOpen] = useState(false);
-  const [messagesOpen, setMessagesOpen] = useState(false);
-  const [role, setRole] = useState('');
-  const [name, setName] = useState('');
-  const [id,setId]=useState('');
-  const [organization, setOrganization] = useState('');
-    // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  useEffect(() => {
-    fetchNotifications();
-     const user = JSON.parse(localStorage.getItem('user'));
-    console.log(user);
-    if (user.name) {
-      setName(user.name); // Set the role in state
-      setOrganization(user.organization); // Set the organization in state
-    }
-  }, []);
-  // Example notifications
-  // const notifications = [
-  //   { id: 1, text: "New user registered", time: "2 min ago" },
-  //   { id: 2, text: "Tenant approved", time: "10 min ago" },
-  //   { id: 3, text: "System update available", time: "1 hr ago" },
-  // ];
- 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-  const router = useNavigate();
-  // const notificationDropdown = () => {
-  //   setNotificationOpen(!notificationOpen);
-  // };
-
-  // const messageDropdown = () => {
-  //   setMessagesOpen(!messagesOpen);
-  // };
-  const handleSignOut = () => {
-    if (role === 'user') {
-      handleLogActivity();
-    }
-    // Clear user data (e.g., remove token from local storage)
-    localStorage.removeItem('token'); // Adjust based on your storage method
-    localStorage.clear();
-    // Redirect to the login page
-    router('/'); // Adjust the path based on your routing setup
-  };
-  // const logUserActivity = async (userId, action, details) => {
-  //   try {
-  //     const response = await fetch('http://localhost:5000/Admin/activity/log', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ userId, action, details }),
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(errorData.message || 'Failed to log activity');
-  //     }
-
-  //     const data = await response.json();
-  //     console.log(data.message); // Log success message
-  //   } catch (error) {
-  //     console.error('Error logging activity:', error.message);
-  //   }
-  // };
-
-  const handleLogActivity = () => {
-    const userId = id; // Replace with actual user ID
-    const action = 'logout'; // Replace with the actual action
-    const details = 'User logged out'; // Additional details
-
-    logUserActivity(userId, action, details);
-  };
-const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [role, setRole] = useState("");
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
+  const [organization, setOrganization] = useState("");
+
+  const router = useNavigate();
   const dropdownRef = useRef(null);
 
-  // Fetch notifications from backend
-  const fetchNotifications = async () => {
-    try {
-      const token = localStorage.getItem("token"); // JWT stored after login
-      const res = await fetch("http://localhost:5000/api/notifications", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+  // 🔑 Helper: call APIs with refresh support
+  const fetchWithAuth = async (url, options = {}) => {
+    let token = localStorage.getItem("token");
+    let refreshToken = localStorage.getItem("refreshToken");
+
+    options.headers = {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    let response = await fetch(url, options);
+
+    if (response.status === 401 && refreshToken) {
+      console.log("⚠️ Access token expired. Trying refresh...");
+
+      const refreshRes = await fetch("http://localhost:5000/api/auth/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
       });
 
+      if (refreshRes.ok) {
+        const { accessToken } = await refreshRes.json();
+        localStorage.setItem("token", accessToken);
+
+        options.headers.Authorization = `Bearer ${accessToken}`;
+        response = await fetch(url, options);
+      } else {
+        console.error("❌ Refresh token failed");
+        localStorage.clear();
+        window.location.href = "/login";
+      }
+    }
+
+    return response;
+  };
+
+  // 🔔 Fetch notifications
+  const fetchNotifications = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const tenantId = user?.TenantId;
+
+      if (!tenantId) {
+        throw new Error("TenantId not found in localStorage");
+      }
+
+      const res = await fetchWithAuth(
+        `http://localhost:5000/api/notifications/${tenantId}`,
+        { method: "GET" }
+      );
+
       const data = await res.json();
+
       if (res.ok) {
         setNotifications(data || []);
-        console.log("Fetched Notifications:", data);
       } else {
-        console.error(data.message);
+        console.error("Backend error:", data.message || "Unknown error");
       }
     } catch (err) {
-      console.error("Error fetching notifications:", err);
+      console.error("Error fetching notifications:", err.message);
     }
   };
 
-  // Fetch notifications on mount
-
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setName(user.name || "");
+      setRole(user.role || "");
+      setOrganization(user.organization || "");
+      setId(user.id || "");
+    }
+    fetchNotifications();
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -119,41 +102,28 @@ const [notifications, setNotifications] = useState([]);
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // 🚪 Handle sign out
+  const handleSignOut = () => {
+    localStorage.clear();
+    router("/");
+  };
+
   return (
-    <>
     <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
-      <header className="h-12 header fixed top-0 left-0 w-full flex items-center shadow-md z-10">
+      <header className="h-12 fixed top-0 left-0 w-full flex items-center shadow-md z-10">
         <div className="flex items-center justify-between w-full px-4 lg:px-8">
           {/* Logo */}
-          <a href="/dashboard" className="logo flex items-center">
+          <a href="/dashboard" className="flex items-center">
             <img src={Logo} alt="Logo" className="h-8" />
             <span className="hidden lg:block ml-2 font-bold text-lg">
-            System
+              System
             </span>
           </a>
-          <button className="text-xl lg:hidden focus:outline-none">
-            <i className="bi bi-list"></i>
-          </button>
         </div>
 
-        {/* Search Bar */}
-        {/* <div className="hidden lg:flex ml-4 mr-4">
-        <form className="flex items-center bg-gray-100 rounded-full px-4 py-2">
-          <input
-            type="text"
-            name="query"
-            placeholder="Search"
-            className="bg-transparent focus:outline-none flex-1 text-sm"
-          />
-          <button type="submit" className="text-gray-500">
-            <i className="bi bi-search"></i>
-          </button>
-        </form>
-      </div> */}
-
-       {/* <div className="flex items-center space-x-4 relative"> */}
-        {/* Notification icon */}
-        <div className="relative mr-3">
+        {/* 🔔 Notifications */}
+        <div className="relative mr-3" ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen((prev) => !prev)}
             className="p-2 rounded-full hover:bg-gray-100 relative"
@@ -166,20 +136,27 @@ const [notifications, setNotifications] = useState([]);
             )}
           </button>
 
-          {/* Dropdown */}
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-64 border rounded shadow-lg z-50">
               <div className="p-2 border-b font-semibold">Notifications</div>
-              <ul>
-                {notifications.map((n) => (
-                  <li
-                    key={n.id}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    <div className="text-sm">{n.message}</div>
-                    <div className="text-xs text-gray-400">{n.createdAt}</div>
+              <ul className="max-h-64 overflow-y-auto">
+                {notifications.length > 0 ? (
+                  notifications.map((n) => (
+                    <li
+                      key={n.id}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      <div className="text-sm">{n.message}</div>
+                      <div className="text-xs text-gray-400">
+                        {new Date(n.createdAt).toLocaleString()}
+                      </div>
+                    </li>
+                  ))
+                ) : (
+                  <li className="px-4 py-2 text-sm text-gray-500">
+                    No notifications
                   </li>
-                ))}
+                )}
               </ul>
               <div className="p-2 border-t text-center text-blue-600 cursor-pointer hover:bg-gray-100">
                 View All
@@ -188,13 +165,12 @@ const [notifications, setNotifications] = useState([]);
           )}
         </div>
 
-        {/* Navigation */}
+        {/* 👤 Profile */}
         <nav className="ml-auto">
           <ul className="flex items-center space-x-4">
-            {/* Profile */}
             <li className="relative mr-2">
               <button
-                onClick={toggleDropdown}
+                onClick={() => setIsOpen((prev) => !prev)}
                 className="flex items-center text-gray-500 focus:outline-none"
               >
                 <img
@@ -206,48 +182,21 @@ const [notifications, setNotifications] = useState([]);
                   {name}
                 </span>
               </button>
-              {/* Profile Dropdown */}
+
               {isOpen && (
                 <div className="absolute right-0 mt-2 shadow-md rounded-md w-48">
                   <div className="p-4 border-b text-center">
                     <h6 className="font-bold">{name}</h6>
                     <span className="text-sm text-gray-500">{role}</span>
                   </div>
-                  <div className="p-4 space-y-2">
-                    {[
-                      // {
-                      //   text: "My Profile",
-                      //   icon: "bi-person",
-                      //   href: "users-profile.html",
-                      // },
-                      // {
-                      //   text: "Account Settings",
-                      //   icon: "bi-gear",
-                      //   href: "users-profile.html",
-                      // },
-                      // {
-                      //   text: "Need Help?",
-                      //   icon: "bi-question-circle",
-                      //   href: "pages-faq.html",
-                      // },
-                      {
-                        text: "Sign Out",
-                        icon: "bi-box-arrow-right",
-                        href: "#",
-                      },
-                    ].map((item, index) => (
-                      <a
-                        key={index}
-                        href={item.href === "#" ? undefined : item.href} // Prevent default for Sign Out
-                        onClick={
-                          item.text === "Sign Out" ? handleSignOut : undefined
-                        } // Call sign out function
-                        className="flex items-center space-x-2 hover:bg-gray-100 p-2 rounded-md"
-                      >
-                        <i className={`bi ${item.icon} text-gray-500`}></i>
-                        <span>{item.text}</span>
-                      </a>
-                    ))}
+                  <div className="p-4">
+                    <button
+                      onClick={handleSignOut}
+                      className="flex w-full items-center space-x-2 hover:bg-gray-100 p-2 rounded-md"
+                    >
+                      <i className="bi bi-box-arrow-right text-gray-500"></i>
+                      <span>Sign Out</span>
+                    </button>
                   </div>
                 </div>
               )}
@@ -255,8 +204,7 @@ const [notifications, setNotifications] = useState([]);
           </ul>
         </nav>
       </header>
-      </div>
-    </>
+    </div>
   );
 };
 
