@@ -16,7 +16,7 @@ const AddTenant = () => {
     setMessage("");
 
     try {
-      const token = localStorage.getItem("token"); // assuming auth token is stored in localStorage
+      const token = localStorage.getItem("token"); 
       const response = await fetch(`${TENANT_API}/add`, {
         method: "POST",
         headers: {
@@ -32,10 +32,10 @@ const AddTenant = () => {
         throw new Error(data.message || "Error creating tenant");
       }
 
-      setMessage(data.message);
-      setName(""); // reset input
+      setMessage(" ✅ " + data.message);
+      setName(""); 
     } catch (error) {
-      setMessage(error.message);
+      setMessage(" ❌ " + error.message);
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,6 @@ const AddTenant = () => {
           {message}
         </p>
       )}
-      {/* {message && <p className="mb-4 text-red-500">{message}</p>} */}
       <form onSubmit={handleSubmit}>
         <input
           type="text"

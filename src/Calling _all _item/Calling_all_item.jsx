@@ -19,49 +19,51 @@ const Calling_all_item = () => {
   return (
     <Router>
       <Routes>
-        {/* Public route */}
         <Route path="/" element={<Login />} />
-
-        {/* SuperAdmin dashboard */}
-         <Route
-        path="/superadmindashboard"
-        element={<MainLayout isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />}
-    >
-        {/* The 'index' route renders at the parent's path: /superadmindashboard */}
-        <Route index element={<SuperAdmin />} />
-
-        {/* These paths are now relative to /superadmindashboard */}
-        <Route path="tenant" element={<Tenant />} /> {/* Renders at /superadmindashboard/tenant */}
-        <Route path="tenant/add" element={<TenantAdd />} /> {/* Renders at /superadmindashboard/tenant/add */}
-        <Route path="profile" element={<Profile />} /> {/* Renders at /superadmindashboard/profile */}
-        <Route path="settings" element={<Settings />} /> {/* Renders at /superadmindashboard/settings */}
-    </Route>
-
-        {/* Admin dashboard */}
+        <Route
+          path="/superadmindashboard"
+          element={
+            <MainLayout
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+            />
+          }
+        >
+          <Route index element={<SuperAdmin />} />
+          <Route path="tenant" element={<Tenant />} />
+          <Route path="tenant/add" element={<TenantAdd />} />
+        </Route>
         <Route
           path="/admindashboard/*"
-          element={<MainLayout isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />}
+          element={
+            <MainLayout
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+            />
+          }
         >
           <Route index element={<Admin />} />
-           <Route path="notification/add" element={<NotificationAdd />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="notification/add" element={<NotificationAdd />} />
         </Route>
-
-        {/* Manager dashboard */}
         <Route
           path="/managerdashboard/*"
-          element={<MainLayout isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />}
+          element={
+            <MainLayout
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+            />
+          }
         >
           <Route index element={<Manager />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
         </Route>
-
-        {/* User page */}
         <Route
           path="/user/*"
-          element={<MainLayout isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />}
+          element={
+            <MainLayout
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+            />
+          }
         >
           <Route index element={<Home />} />
         </Route>

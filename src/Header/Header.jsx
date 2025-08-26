@@ -12,11 +12,8 @@ const Header = () => {
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [organization, setOrganization] = useState("");
-
   const router = useNavigate();
   const dropdownRef = useRef(null);
-
-  // 🔑 Helper: call APIs with refresh support
   const fetchWithAuth = async (url, options = {}) => {
     let token = localStorage.getItem("token");
     let refreshToken = localStorage.getItem("refreshToken");
@@ -26,22 +23,17 @@ const Header = () => {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
-
     let response = await fetch(url, options);
-
     if (response.status === 401 && refreshToken) {
       console.log("⚠️ Access token expired. Trying refresh...");
-
       const refreshRes = await fetch("http://localhost:5000/api/auth/refresh", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refreshToken }),
       });
-
       if (refreshRes.ok) {
         const { accessToken } = await refreshRes.json();
         localStorage.setItem("token", accessToken);
-
         options.headers.Authorization = `Bearer ${accessToken}`;
         response = await fetch(url, options);
       } else {
@@ -50,11 +42,9 @@ const Header = () => {
         window.location.href = "/login";
       }
     }
-
     return response;
   };
 
-  // 🔔 Fetch notifications
   const fetchNotifications = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -91,8 +81,6 @@ const Header = () => {
     }
     fetchNotifications();
   }, []);
-
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -102,8 +90,6 @@ const Header = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // 🚪 Handle sign out
   const handleSignOut = () => {
     localStorage.clear();
     router("/");
@@ -113,7 +99,6 @@ const Header = () => {
     <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
       <header className="h-12 fixed top-0 left-0 w-full flex items-center shadow-md z-10">
         <div className="flex items-center justify-between w-full px-4 lg:px-8">
-          {/* Logo */}
           <a className="flex items-center">
             <img src={Logo} alt="Logo" className="h-8" />
             <span className="hidden lg:block ml-2 font-bold text-lg">
@@ -121,89 +106,86 @@ const Header = () => {
             </span>
           </a>
         </div>
-<div className="flex items-center mr-20 space-x-4">
-        {/* 🔔 Notifications */}
-        <div className="relative mr-3" ref={dropdownRef}>
-          <button
-            onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="p-2 rounded-full hover:bg-gray-100 relative"
-          >
-            <Bell size={24} />
-            {notifications.length > 0 && (
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
-                {notifications.length}
-              </span>
-            )}
-          </button>
-
-          {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 w-64 border rounded shadow-lg z-50 bg-white dark:bg-gray-800">
-            <div className="p-2 border-b font-semibold">Notifications</div>
-            <ul className="max-h-64 overflow-y-auto">
-              {notifications.length > 0 ? (
-                notifications.map((n) => (
-                  <li
-                    key={n.id}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    <div className="text-sm">{n.message}</div>
-                    <div className="text-xs text-gray-400">
-                      {new Date(n.createdAt).toLocaleString()}
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li className="px-4 py-2 text-sm text-gray-500">
-                  No notifications
-                </li>
-              )}
-            </ul>
-            <div className="p-2 border-t text-center text-blue-600 cursor-pointer hover:bg-gray-100">
-              View All
-            </div>
-          </div>
-        )}
-        </div>
-
-        {/* 👤 Profile */}
-        <nav className="ml-auto">
-          <ul className="flex items-center space-x-4">
-            <li className="relative mr-2">
-              <button
-                onClick={() => setIsOpen((prev) => !prev)}
-                className="flex items-center text-gray-500 focus:outline-none"
-              >
-                <img
-                  src={profile}
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full"
-                />
-                <span className="hidden md:block ml-4 mr-10 font-medium">
-                  {name}
+        <div className="flex items-center mr-20 space-x-4">
+          <div className="relative mr-3" ref={dropdownRef}>
+            <button
+              onClick={() => setIsDropdownOpen((prev) => !prev)}
+              className="p-2 rounded-full hover:bg-gray-100 relative"
+            >
+              <Bell size={24} />
+              {notifications.length > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                  {notifications.length}
                 </span>
-              </button>
-
-              {isOpen && (
-                <div className="absolute right-0 mt-2 shadow-md rounded-md w-48 bg-white dark:bg-gray-800">
-                  <div className="p-4 border-b text-center">
-                    <h6 className="font-bold">{name}</h6>
-                    <span className="text-sm text-gray-500">{role}</span>
-                  </div>
-                  <div className="p-4">
-                    <button
-                      onClick={handleSignOut}
-                      className="flex w-full items-center space-x-2 hover:bg-gray-100 p-2 rounded-md"
-                    >
-                      <i className="bi bi-box-arrow-right text-gray-500"></i>
-                      <span>Sign Out</span>
-                    </button>
-                  </div>
-                </div>
               )}
-            </li>
-          </ul>
-        </nav>
-      </div>
+            </button>
+
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-64 border rounded shadow-lg z-50 bg-white dark:bg-gray-800">
+                <div className="p-2 border-b font-semibold">Notifications</div>
+                <ul className="max-h-64 overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.map((n) => (
+                      <li
+                        key={n.id}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        <div className="text-sm">{n.message}</div>
+                        <div className="text-xs text-gray-400">
+                          {new Date(n.createdAt).toLocaleString()}
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="px-4 py-2 text-sm text-gray-500">
+                      No notifications
+                    </li>
+                  )}
+                </ul>
+                <div className="p-2 border-t text-center text-blue-600 cursor-pointer hover:bg-gray-100">
+                  View All
+                </div>
+              </div>
+            )}
+          </div>
+          <nav className="ml-auto">
+            <ul className="flex items-center space-x-4">
+              <li className="relative mr-2">
+                <button
+                  onClick={() => setIsOpen((prev) => !prev)}
+                  className="flex items-center text-gray-500 focus:outline-none"
+                >
+                  <img
+                    src={profile}
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <span className="hidden md:block ml-4 mr-10 font-medium">
+                    {name}
+                  </span>
+                </button>
+
+                {isOpen && (
+                  <div className="absolute right-0 mt-2 shadow-md rounded-md w-48 bg-white dark:bg-gray-800">
+                    <div className="p-4 border-b text-center">
+                      <h6 className="font-bold">{name}</h6>
+                      <span className="text-sm text-gray-500">{role}</span>
+                    </div>
+                    <div className="p-4">
+                      <button
+                        onClick={handleSignOut}
+                        className="flex w-full items-center space-x-2 hover:bg-gray-100 p-2 rounded-md"
+                      >
+                        <i className="bi bi-box-arrow-right text-gray-500"></i>
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </li>
+            </ul>
+          </nav>
+        </div>
       </header>
     </div>
   );

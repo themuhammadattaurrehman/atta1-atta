@@ -3,8 +3,8 @@ import React, { useState } from "react";
 const NOTIFICATION_API = "http://localhost:5000/api/notifications";
 
 const NotificationAdd = () => {
-  const [message, setMessage] = useState(""); // input value
-  const [status, setStatus] = useState(""); // success/error message
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState(""); 
   const [loading, setLoading] = useState(false);
 
  console.log("TenantId:", localStorage.user?.TenantId);
@@ -21,9 +21,9 @@ const handleSubmit = async (e) => {
   setStatus("");
 
   try {
-    const token = localStorage.getItem("token"); // JWT token
-    const user = JSON.parse(localStorage.getItem("user")); // Parse user object
-    const tenantId = user?.TenantId; // Get TenantId safely
+    const token = localStorage.getItem("token"); 
+    const user = JSON.parse(localStorage.getItem("user")); 
+    const tenantId = user?.TenantId;
 
     if (!tenantId) {
       throw new Error("TenantId not found in localStorage");
@@ -36,8 +36,7 @@ const handleSubmit = async (e) => {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ 
-        message, 
-        tenantId   // 👈 send tenantId with the message
+        message,  tenantId   
       }),
     });
 
@@ -48,7 +47,7 @@ const handleSubmit = async (e) => {
     }
 
     setStatus("✅ Notification created successfully!");
-    setMessage(""); // clear input after success
+    setMessage(""); 
   } catch (err) {
     console.error("Notification create error:", err.message);
     setStatus("❌ " + err.message);

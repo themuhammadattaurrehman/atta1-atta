@@ -35,7 +35,7 @@ const toggleApproval = async (id, currentStatus) => {
   try {
     const token = localStorage.getItem("token");
     const res = await fetch(`${API_URL}/users/${id}/approval`, {
-      method: "PUT", // <-- changed from POST to PUT
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -45,7 +45,6 @@ const toggleApproval = async (id, currentStatus) => {
 
     const data = await res.json();
     console.log("Approval toggled:", data);
-    // update state without reload
     setAdmins((prev) =>
       prev.map((a) => (a.id === id ? { ...a, approved: data.user.approved } : a))
     );
@@ -63,7 +62,6 @@ const toggleApproval = async (id, currentStatus) => {
         <table className="min-w-full border border-gray-200 shadow-md rounded-lg">
           <thead className=" border-b border-gray-100">
             <tr>
-              {/* <th className="px-4 py-2 text-left">ID</th> */}
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Email</th>
               <th className="px-4 py-2 text-left">Role</th>
@@ -74,7 +72,6 @@ const toggleApproval = async (id, currentStatus) => {
           <tbody>
             {admins.map((admin) => (
               <tr key={admin.id} className="border-t">
-                {/* <td className="px-4 py-2">{admin.id}</td> */}
                 <td className="px-4 py-2">{admin.name}</td>
                 <td className="px-4 py-2">{admin.email}</td>
                 <td className="px-4 py-2">{admin.role}</td>

@@ -7,14 +7,13 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("User");
   const [tenant, setTenant] = useState("");
-  const [tenants, setTenants] = useState([]); // 👈 fetched tenant list
+  const [tenants, setTenants] = useState([]);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const API_URL = "http://localhost:5000/api/auth";
   const TENANT_API = "http://localhost:5000/api/tenants";
 
-  // 👇 Fetch tenants on page load
   useEffect(() => {
     fetchTenants();
   }, []);
@@ -23,7 +22,6 @@ export default function Login() {
       const res = await fetch(TENANT_API, {
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${localStorage.getItem("token") || ""}`, // if auth required
         },
       });
       const data = await res.json();
@@ -36,8 +34,7 @@ export default function Login() {
       console.error("Error fetching tenants", err);
     }
   };
-  
-  // handle login
+
 const handleLogin = async (e) => {
   e.preventDefault();
   const email = e.target.email.value;
@@ -51,16 +48,12 @@ const handleLogin = async (e) => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Login failed");
-
     setMessage("✅ Login successful!");
-
-    // Save tokens and role in localStorage
     localStorage.setItem("token", data.accessToken);
     localStorage.setItem("refreshToken", data.refreshToken);
-    localStorage.setItem("role", data.user.role);   // 👈 store role
-    localStorage.setItem("user", JSON.stringify(data.user)); // optional: full user
+    localStorage.setItem("role", data.user.role);  
+    localStorage.setItem("user", JSON.stringify(data.user));
 console.log("Access Token:", data.user.role);
-    // Example: redirect based on role
     switch (data.user.role) {
       case "SuperAdmin":
         navigate("/superadmindashboard");
@@ -79,9 +72,6 @@ console.log("Access Token:", data.user.role);
     setMessage("❌ " + err.message);
   }
 };
-
-
-  // handle register
   const handleRegister = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -113,7 +103,6 @@ console.log("Access Token:", data.user.role);
         className="w-full max-w-md"
       >
         <div className=" backdrop-blur rounded-2xl shadow-2xl p-6">
-          {/* Tabs */}
           <div className="flex justify-between mb-6">
             <button
               onClick={() => setActiveTab("login")}
@@ -136,8 +125,6 @@ console.log("Access Token:", data.user.role);
               Register
             </button>
           </div>
-
-          {/* Login Form */}
           {activeTab === "login" && (
             <form onSubmit={handleLogin} className="space-y-4">
               <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
@@ -181,8 +168,6 @@ console.log("Access Token:", data.user.role);
               </button>
             </form>
           )}
-
-          {/* Register Form */}
           {activeTab === "register" && (
             <form onSubmit={handleRegister} className="space-y-4">
               <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
@@ -220,7 +205,6 @@ console.log("Access Token:", data.user.role);
              text-black dark:text-white 
              placeholder-gray-400 dark:placeholder-gray-500 
              bg-white dark:bg-gray-800">
-                {/* <option value="SuperAdmin">SuperAdmin</option> */}
                 <option value="Admin">Admin</option>
                 <option value="Manager">Manager</option>
                 <option value="User">User</option>
