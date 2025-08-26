@@ -66,6 +66,7 @@ const toggleApproval = async (id, currentStatus) => {
               {/* <th className="px-4 py-2 text-left">ID</th> */}
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Email</th>
+              <th className="px-4 py-2 text-left">Role</th>
               <th className="px-4 py-2 text-left">Status</th>
               <th className="px-4 py-2 text-left">Actions</th>
             </tr>
@@ -76,6 +77,7 @@ const toggleApproval = async (id, currentStatus) => {
                 {/* <td className="px-4 py-2">{admin.id}</td> */}
                 <td className="px-4 py-2">{admin.name}</td>
                 <td className="px-4 py-2">{admin.email}</td>
+                <td className="px-4 py-2">{admin.role}</td>
                 <td className="px-4 py-2">
                   {admin.approved ? (
                     <span className="text-green-600 font-semibold">Approved</span>

@@ -10,11 +10,16 @@ export default function SuperAdmin() {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const token = localStorage.getItem("token");
-        console.log("Fetching admins with token:", token);
-        const res = await fetch(`${API_URL}/users/managers-users`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const user = JSON.parse(localStorage.getItem("user"));
+      const tenantId = user?.TenantId;
+
+      if (!tenantId) throw new Error("TenantId not found in localStorage");
+
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(`${API_URL}/users/managers-users?tenantId=${tenantId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
         const data = await res.json();
         console.log("Fetched Admins:", data);
         setAdmins(data.data || []);
@@ -66,6 +71,7 @@ export default function SuperAdmin() {
               {/* <th className="px-4 py-2 text-left">ID</th> */}
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Email</th>
+              <th className="px-4 py-2 text-left">Role</th>
               <th className="px-4 py-2 text-left">Status</th>
               {/* <th className="px-4 py-2 text-left">Actions</th> */}
             </tr>
@@ -76,6 +82,7 @@ export default function SuperAdmin() {
                 {/* <td className="px-4 py-2">{admin.id}</td> */}
                 <td className="px-4 py-2">{admin.name}</td>
                 <td className="px-4 py-2">{admin.email}</td>
+                <td className="px-4 py-2">{admin.role}</td>
                 <td className="px-4 py-2">
                   {admin.approved ? (
                     <span className="text-green-600 font-semibold">Approved</span>

@@ -6,29 +6,33 @@ export default function SuperAdmin() {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch admins on load
-  useEffect(() => {
-    const fetchAdmins = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        console.log("Fetching admins with token:", token);
-        const res = await fetch(`${API_URL}/users/admins`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        console.log("Fetched Admins:", data);
-        setAdmins(data || []);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchAdmins = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Fetching admins with token:", token);
 
-    fetchAdmins();
-  }, []);
+      const res = await fetch(`${API_URL}/users/admins`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-  // ✅ Approve/Unapprove toggle
+      const data = await res.json();
+      console.log("Fetched Admins:", data);
+
+      // Only set array, never object
+      setAdmins(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error(err);
+      setAdmins([]); // fallback
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAdmins();
+}, []);
+
+
 const toggleApproval = async (id, currentStatus) => {
   try {
     const token = localStorage.getItem("token");
@@ -40,10 +44,8 @@ const toggleApproval = async (id, currentStatus) => {
       },
       body: JSON.stringify({ approved: !currentStatus }),
     });
-
     const data = await res.json();
     console.log("Approval toggled:", data);
-    // update state without reload
     setAdmins((prev) =>
       prev.map((a) => (a.id === id ? { ...a, approved: data.user.approved } : a))
     );
@@ -62,9 +64,9 @@ const toggleApproval = async (id, currentStatus) => {
         <table className="min-w-full border border-gray-200 shadow-md rounded-lg">
           <thead className="border-b border-gray-100">
             <tr>
-              {/* <th className="px-4 py-2 text-left">ID</th> */}
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Email</th>
+              <th className="px-4 py-2 text-left">Role</th>
               <th className="px-4 py-2 text-left">Status</th>
               <th className="px-4 py-2 text-left">Actions</th>
             </tr>
@@ -75,6 +77,7 @@ const toggleApproval = async (id, currentStatus) => {
                 {/* <td className="px-4 py-2">{admin.id}</td> */}
                 <td className="px-4 py-2">{admin.name}</td>
                 <td className="px-4 py-2">{admin.email}</td>
+                <td className="px-4 py-2">{admin.role}</td>
                 <td className="px-4 py-2">
                   {admin.approved ? (
                     <span className="text-green-600 font-semibold">Approved</span>

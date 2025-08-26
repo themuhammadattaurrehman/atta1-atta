@@ -114,14 +114,14 @@ const Header = () => {
       <header className="h-12 fixed top-0 left-0 w-full flex items-center shadow-md z-10">
         <div className="flex items-center justify-between w-full px-4 lg:px-8">
           {/* Logo */}
-          <a href="/dashboard" className="flex items-center">
+          <a className="flex items-center">
             <img src={Logo} alt="Logo" className="h-8" />
             <span className="hidden lg:block ml-2 font-bold text-lg">
               System
             </span>
           </a>
         </div>
-
+<div className="flex items-center mr-20 space-x-4">
         {/* 🔔 Notifications */}
         <div className="relative mr-3" ref={dropdownRef}>
           <button
@@ -137,32 +137,32 @@ const Header = () => {
           </button>
 
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-64 border rounded shadow-lg z-50">
-              <div className="p-2 border-b font-semibold">Notifications</div>
-              <ul className="max-h-64 overflow-y-auto">
-                {notifications.length > 0 ? (
-                  notifications.map((n) => (
-                    <li
-                      key={n.id}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      <div className="text-sm">{n.message}</div>
-                      <div className="text-xs text-gray-400">
-                        {new Date(n.createdAt).toLocaleString()}
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <li className="px-4 py-2 text-sm text-gray-500">
-                    No notifications
+          <div className="absolute right-0 mt-2 w-64 border rounded shadow-lg z-50 bg-white dark:bg-gray-800">
+            <div className="p-2 border-b font-semibold">Notifications</div>
+            <ul className="max-h-64 overflow-y-auto">
+              {notifications.length > 0 ? (
+                notifications.map((n) => (
+                  <li
+                    key={n.id}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    <div className="text-sm">{n.message}</div>
+                    <div className="text-xs text-gray-400">
+                      {new Date(n.createdAt).toLocaleString()}
+                    </div>
                   </li>
-                )}
-              </ul>
-              <div className="p-2 border-t text-center text-blue-600 cursor-pointer hover:bg-gray-100">
-                View All
-              </div>
+                ))
+              ) : (
+                <li className="px-4 py-2 text-sm text-gray-500">
+                  No notifications
+                </li>
+              )}
+            </ul>
+            <div className="p-2 border-t text-center text-blue-600 cursor-pointer hover:bg-gray-100">
+              View All
             </div>
-          )}
+          </div>
+        )}
         </div>
 
         {/* 👤 Profile */}
@@ -184,7 +184,7 @@ const Header = () => {
               </button>
 
               {isOpen && (
-                <div className="absolute right-0 mt-2 shadow-md rounded-md w-48">
+                <div className="absolute right-0 mt-2 shadow-md rounded-md w-48 bg-white dark:bg-gray-800">
                   <div className="p-4 border-b text-center">
                     <h6 className="font-bold">{name}</h6>
                     <span className="text-sm text-gray-500">{role}</span>
@@ -203,6 +203,7 @@ const Header = () => {
             </li>
           </ul>
         </nav>
+      </div>
       </header>
     </div>
   );
