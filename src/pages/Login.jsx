@@ -23,7 +23,7 @@ export default function Login() {
       const res = await fetch(TENANT_API, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token") || ""}`, // if auth required
+          // Authorization: `Bearer ${localStorage.getItem("token") || ""}`, // if auth required
         },
       });
       const data = await res.json();
