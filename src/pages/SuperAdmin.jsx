@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:5000/api"; // change to your backend URL
+const API_URL = "http://localhost:5000/api"; 
 
 export default function SuperAdmin() {
   const [admins, setAdmins] = useState([]);
@@ -11,19 +11,15 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
       console.log("Fetching admins with token:", token);
-
       const res = await fetch(`${API_URL}/users/admins`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       const data = await res.json();
       console.log("Fetched Admins:", data);
-
-      // Only set array, never object
       setAdmins(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
-      setAdmins([]); // fallback
+      setAdmins([]);
     } finally {
       setLoading(false);
     }
@@ -37,7 +33,7 @@ const toggleApproval = async (id, currentStatus) => {
   try {
     const token = localStorage.getItem("token");
     const res = await fetch(`${API_URL}/users/${id}/approval`, {
-      method: "PUT", // <-- changed from POST to PUT
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -67,6 +63,7 @@ const toggleApproval = async (id, currentStatus) => {
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Email</th>
               <th className="px-4 py-2 text-left">Role</th>
+              <th className="px-4 py-2 text-left">Tenant</th>
               <th className="px-4 py-2 text-left">Status</th>
               <th className="px-4 py-2 text-left">Actions</th>
             </tr>
@@ -74,10 +71,10 @@ const toggleApproval = async (id, currentStatus) => {
           <tbody>
             {admins.map((admin) => (
               <tr key={admin.id} className="border-t">
-                {/* <td className="px-4 py-2">{admin.id}</td> */}
                 <td className="px-4 py-2">{admin.name}</td>
                 <td className="px-4 py-2">{admin.email}</td>
                 <td className="px-4 py-2">{admin.role}</td>
+                <td className="px-4 py-2">{admin.Tenant.name || 'N/A'}</td>
                 <td className="px-4 py-2">
                   {admin.approved ? (
                     <span className="text-green-600 font-semibold">Approved</span>

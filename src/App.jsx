@@ -19,7 +19,7 @@ function App() {
     <>
       <button
         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        className=" fixed top-2 right-4 z-50 px-3 py-1 rounded bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+        className=" fixed top-2 right-2 z-50 px-3 py-1 rounded bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
       >
         {theme === 'dark' ? '🌙 Dark' : '☀️ Light'}
       </button>
